@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bomben">
+<meta name="theme-color" content="#12151c">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💣</text></svg>">
+<title>Bomben 💣</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at 50% 30%, #2b3140, #12151c 70%) fixed;
+    color: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    /* Touch: inget dubbeltrycks-zoom, ingen markering av text vid långtryck */
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hidden { display: none !important; }
+  button { font-family: inherit; touch-action: manipulation; }
+
+  /* ---------- Inställningar ---------- */
+  .card {
+    background: #1d222c;
+    border: 2px solid #3a4150;
+    border-radius: 20px;
+    padding: 24px 32px;
+    width: min(620px, 94vw);
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    margin: 16px 0;
+  }
+  h1 { margin: 0 0 4px; font-size: 2.4rem; text-align: center; }
+  h3 { margin: 4px 0 12px; font-size: 1.1rem; color: #aab; font-weight: 600; }
+  .subtitle { text-align: center; color: #aab; margin: 0 0 12px; }
+  .setting { margin-bottom: 8px; }
+  .setting label { display: flex; justify-content: space-between; font-size: 1.15rem; margin-bottom: 4px; }
+  .setting .value { font-weight: 700; color: #ffcc33; }
+  input[type=range] { width: 100%; accent-color: #ffcc33; height: 32px; cursor: pointer; margin: 0; }
+
+  .choice { display: flex; gap: 10px; }
+  .choice button {
+    flex: 1;
+    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #3a4150;
+    background: #262c38;
+    color: #f2f2f2;
+    cursor: pointer;
+  }
+  .choice button.active { border-color: #ffcc33; background: #3a3420; font-weight: 700; }
+
+  .extras { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-bottom: 8px; }
+  @media (max-width: 520px) { .extras { grid-template-columns: 1fr; } }
+  .toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 1.05rem; cursor: pointer; padding: 4px 0; }
+  .toggle input { width: 24px; height: 24px; margin: 0; accent-color: #ffcc33; cursor: pointer; flex-shrink: 0; }
+  .toggle small { display: block; color: #99a; font-size: .85rem; }
+
+  .big-btn {
+    display: block;
+    width: 100%;
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: #e53935;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #9b1f1c;
+    transition: transform .05s;
+    margin-top: 10px;
+  }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #9b1f1c; }
+  .big-btn.secondary { background: #3a4150; box-shadow: 0 6px 0 #232833; margin-top: 14px; }
+
+  /* ---------- Spelet ---------- */
+  /* Bredden begränsas också av skärmhöjden så att allt får plats på en surfplatta */
+  #game { position: relative; width: min(1000px, 96vw, calc((100dvh - 130px) * 1.54)); text-align: center; }
+  #game svg { width: 100%; height: auto; display: block; }
+  #message { font-size: 1.5rem; font-weight: 700; min-height: 1.4em; margin-top: 6px; }
+  #hint { font-size: 1.25rem; color: #ffcc33; min-height: 1.4em; margin-top: 4px; }
+
+  .wire { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='2' y='32' font-size='32'>✂️</text></svg>") 20 20, pointer; }
+  .picking .wire { cursor: pointer; }
+  .wire .half { transition: transform .35s ease-in; transform-box: view-box; }
+  @media (hover: hover) {
+    .wire:not(.cut):hover .half { filter: drop-shadow(0 0 6px rgba(255,255,255,.8)); }
+  }
+  .wire .copper { opacity: 0; transition: opacity .1s; }
+  .wire.cut { cursor: default; }
+  .wire.cut .copper { opacity: 1; }
+  .wire.cut .left  { transform: rotate(6deg) scale(.88); }
+  .wire.cut .right { transform: rotate(-6deg) scale(.88); }
+  .wire.picked .half { filter: drop-shadow(0 0 8px #ffcc33); }
+  .wire.reveal .half { animation: glow .6s ease-in-out infinite alternate; }
+  @keyframes glow {
+    from { filter: drop-shadow(0 0 2px #fff); }
+    to   { filter: drop-shadow(0 0 14px #fff); }
+  }
+
+  .spark { animation: spark .5s ease-out forwards; }
+  @keyframes spark {
+    from { opacity: 1; transform: translate(0,0); }
+    to   { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+  }
+
+  #timer { font-family: "Courier New", monospace; font-weight: 700; fill: #ff3b30; }
+  #timer.turbo { fill: #ffcc33; }
+  #timer.freeze { fill: #4fc3f7; }
+  #timer.won { fill: #4caf50; }
+  #timer.danger { animation: blink .5s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+
+  .shake { animation: shake .4s; }
+  .big-shake { animation: shake .12s 6; }
+  @keyframes shake {
+    0%, 100% { transform: translate(0,0); }
+    20% { transform: translate(-8px, 4px); }
+    40% { transform: translate(7px, -5px); }
+    60% { transform: translate(-6px, -3px); }
+    80% { transform: translate(5px, 6px); }
+  }
+
+  /* ---------- Kodlås ---------- */
+  #keypad {
+    position: absolute;
+    left: 50%;
+    top: 44.5%;
+    transform: translateX(-50%);
+    background: #20252f;
+    border: 4px solid #111;
+    border-radius: 18px;
+    padding: 10px 12px 12px;
+    box-shadow: 0 16px 40px rgba(0,0,0,.6);
+    animation: pop .3s ease-out;
+  }
+  #codeDisplay {
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    font-size: 2.1rem;
+    letter-spacing: .4em;
+    padding: 2px 0 2px .4em;
+    margin-bottom: 8px;
+    background: #071a07;
+    color: #4cff6a;
+    border-radius: 10px;
+    min-width: 230px;
+  }
+  #codeDisplay.showing { color: #ffcc33; }
+  .keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .keys button {
+    width: 68px; height: 50px;
+    font-size: 1.6rem; font-weight: 700;
+    border: none; border-radius: 12px;
+    background: #4a5263; color: #fff;
+    box-shadow: 0 4px 0 #2a2f3a;
+    cursor: pointer;
+  }
+  .keys button:active { transform: translateY(3px); box-shadow: 0 1px 0 #2a2f3a; }
+  .keys button:disabled { opacity: .4; }
+  .keys .empty { visibility: hidden; }
+
+  /* ---------- Explosion, överlämning och resultat ---------- */
+  #flash {
+    position: fixed; inset: 0;
+    background: radial-gradient(circle, #fff 0%, #ffeb3b 20%, #ff9800 45%, #d32f2f 75%, #300 100%);
+    animation: flash 1.2s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes flash {
+    0% { opacity: 0; transform: scale(.2); }
+    10% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(1.6); }
+  }
+  .overlay {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.6);
+  }
+  #handover { background: rgba(10,12,18,.97); }
+  .overlay .card { text-align: center; animation: popCard .4s ease-out; width: min(520px, 92vw); }
+  .overlay .emoji { font-size: 6rem; line-height: 1; }
+  .overlay h2 { font-size: 2.4rem; margin: 10px 0; }
+  .overlay p { font-size: 1.2rem; color: #ccd; margin: 0 0 24px; }
+  @keyframes pop { from { transform: translateX(-50%) scale(.5); opacity: 0; } }
+  @keyframes popCard { from { transform: scale(.5); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<!-- Inställningar -->
+<div id="setup" class="card">
+  <h1>💣 Bomben</h1>
+  <p class="subtitle">Klipp rätt sladd innan bomben smäller!</p>
+
+  <div class="setting">
+    <label>⏱️ Tid <span class="value" id="timeValue"></span></label>
+    <input type="range" id="timeInput" min="10" max="180" step="5" value="30">
+  </div>
+  <div class="setting">
+    <label>🔌 Antal sladdar <span class="value" id="wiresValue"></span></label>
+    <input type="range" id="wiresInput" min="3" max="8" step="1" value="5">
+  </div>
+  <div class="setting">
+    <label>✂️ Antal försök <span class="value" id="triesValue"></span></label>
+    <input type="range" id="triesInput" min="1" max="4" step="1" value="2">
+  </div>
+  <div class="setting">
+    <label>🎯 Vem väljer rätt sladd?</label>
+    <div class="choice" id="modeChoice">
+      <button data-mode="computer" class="active">🤖 Datorn</button>
+      <button data-mode="friend">🙋 En kompis</button>
+    </div>
+  </div>
+
+  <h3>Extra utmaningar</h3>
+  <div class="extras">
+    <label class="toggle">
+      <input type="checkbox" id="hintsInput" checked>
+      <span>💡 Ledtrådar<small>Ett fel klipp ger en ledtråd.</small></span>
+    </label>
+    <label class="toggle">
+      <input type="checkbox" id="codeInput">
+      <span>🔢 Kodlås<small>Efter rätt sladd: kom ihåg koden och slå in den.</small></span>
+    </label>
+    <label class="toggle">
+      <input type="checkbox" id="doubleInput">
+      <span>💣💣 Dubbelbomb<small>Två sladdar är rätt – klipp båda!</small></span>
+    </label>
+    <label class="toggle">
+      <input type="checkbox" id="turboInput">
+      <span>⚡ Turbosladd<small>En fel sladd gör att tiden går dubbelt så fort.</small></span>
+    </label>
+    <label class="toggle">
+      <input type="checkbox" id="freezeInput">
+      <span>❄️ Frys-sladd<small>En sladd ger 10 extra sekunder.</small></span>
+    </label>
+    <label class="toggle">
+      <input type="checkbox" id="blinkInput">
+      <span>🌈 Blinksladd<small>En sladd byter färg hela tiden.</small></span>
+    </label>
+  </div>
+
+  <button class="big-btn" id="startBtn">Starta bomben!</button>
+</div>
+
+<!-- Spelplan -->
+<div id="game" class="hidden">
+  <svg id="board" viewBox="0 0 800 520"></svg>
+  <div id="keypad" class="hidden">
+    <div id="codeDisplay"></div>
+    <div class="keys">
+      <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
+      <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
+      <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
+      <button class="empty"></button><button data-key="0">0</button><button data-key="back">⌫</button>
+    </div>
+  </div>
+  <div id="message"></div>
+  <div id="hint"></div>
+</div>
+
+<!-- Överlämning när en kompis har valt sladd -->
+<div id="handover" class="overlay hidden">
+  <div class="card">
+    <div class="emoji">🤫</div>
+    <h2>Hemligt val klart!</h2>
+    <p>Lämna nu över till bombexperten.</p>
+    <button class="big-btn" id="goBtn">Jag är redo – starta nedräkningen!</button>
+  </div>
+</div>
+
+<!-- Resultat -->
+<div id="result" class="overlay hidden">
+  <div class="card">
+    <div class="emoji" id="resultEmoji"></div>
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <button class="big-btn" id="againBtn">Spela igen</button>
+    <button class="big-btn secondary" id="settingsBtn">Ändra inställningar</button>
+  </div>
+</div>
+
+<script>
+const COLORS = [
+  { name: "röda",   hex: "#e53935", warm: true },
+  { name: "blå",    hex: "#1e88e5", warm: false },
+  { name: "gröna",  hex: "#43a047", warm: false },
+  { name: "gula",   hex: "#fdd835", warm: true },
+  { name: "vita",   hex: "#f5f5f5", warm: false },
+  { name: "lila",   hex: "#8e24aa", warm: false },
+  { name: "orange", hex: "#fb8c00", warm: true },
+  { name: "rosa",   hex: "#f06292", warm: true },
+];
+const FREEZE_BONUS_MS = 10000;
+const CODE_LENGTH = 3;
+const CODE_SHOW_MS = 3000;
+
+const $ = id => document.getElementById(id);
+const checked = id => $(id).checked;
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+// ---------- Inställningar ----------
+const timeInput = $("timeInput"), wiresInput = $("wiresInput"), triesInput = $("triesInput");
+let mode = "computer";
+
+function formatSeconds(s) {
+  if (s < 60) return s + " sekunder";
+  const m = Math.floor(s / 60), r = s % 60;
+  return m + " min" + (r ? " " + r + " s" : "");
+}
+
+function updateLabels() {
+  // Fler försök än det finns fel sladdar vore för lätt – då kan man inte förlora på försök.
+  triesInput.max = wiresInput.value - (checked("doubleInput") ? 2 : 1);
+  if (+triesInput.value > +triesInput.max) triesInput.value = triesInput.max;
+  $("timeValue").textContent = formatSeconds(+timeInput.value);
+  $("wiresValue").textContent = wiresInput.value;
+  $("triesValue").textContent = triesInput.value;
+}
+[timeInput, wiresInput, triesInput, $("doubleInput")].forEach(el => el.addEventListener("input", updateLabels));
+updateLabels();
+
+document.querySelectorAll("#modeChoice button").forEach(btn => btn.addEventListener("click", () => {
+  mode = btn.dataset.mode;
+  document.querySelectorAll("#modeChoice button").forEach(b => b.classList.toggle("active", b === btn));
+}));
+
+// ---------- Ljud ----------
+let audio;
+function tone(freq, duration, type = "sine", volume = 0.2, delay = 0) {
+  const t = audio.currentTime + delay;
+  const osc = audio.createOscillator(), gain = audio.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.connect(gain).connect(audio.destination);
+  osc.start(t);
+  osc.stop(t + duration);
+}
+function noise(duration, filterType, freqStart, freqEnd, volume) {
+  const t = audio.currentTime;
+  const buffer = audio.createBuffer(1, audio.sampleRate * duration, audio.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+  const src = audio.createBufferSource();
+  src.buffer = buffer;
+  const filter = audio.createBiquadFilter();
+  filter.type = filterType;
+  filter.frequency.setValueAtTime(freqStart, t);
+  filter.frequency.exponentialRampToValueAtTime(freqEnd, t + duration);
+  const gain = audio.createGain();
+  gain.gain.setValueAtTime(volume, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  src.connect(filter).connect(gain).connect(audio.destination);
+  src.start(t);
+}
+const sound = {
+  tick:   urgent => tone(urgent ? 1400 : 1000, 0.04, "square", 0.05),
+  snip:   () => noise(0.08, "highpass", 4000, 2000, 0.6),
+  wrong:  () => tone(110, 0.4, "sawtooth", 0.15),
+  turbo:  () => [400, 600, 800, 1000, 1200].forEach((f, i) => tone(f, 0.12, "square", 0.08, i * 0.06)),
+  freeze: () => [1568, 1319, 1047, 1319, 1568].forEach((f, i) => tone(f, 0.25, "sine", 0.12, i * 0.07)),
+  pick:   () => tone(660, 0.15, "triangle", 0.2),
+  key:    () => tone(880, 0.06, "square", 0.06),
+  boom:   () => { noise(2.0, "lowpass", 1200, 60, 1.0); tone(55, 1.2, "sine", 0.8); },
+  win:    () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.35, "triangle", 0.2, i * 0.12)),
+};
+
+// ---------- Spelet ----------
+// phase: "pick" (kompisen väljer), "handover", "play" (klipp sladdar), "code" (kodlåset), "over"
+let state;
+
+function startGame() {
+  if (!audio) audio = new AudioContext();
+  audio.resume();
+  if (state) clearInterval(state.blinkTimer);
+  const wireCount = +wiresInput.value;
+  state = {
+    phase: "over",
+    wireCount,
+    correctCount: checked("doubleInput") ? 2 : 1,
+    correct: new Set(),
+    turbo: null,
+    freeze: null,
+    blink: null,
+    blinkTimer: null,
+    triesLeft: +triesInput.value,
+    totalTries: +triesInput.value,
+    remaining: +timeInput.value * 1000,
+    speed: 1,
+    lastFrame: null,
+    lastShownSecond: null,
+    hintsUsed: new Set(),
+    code: "",
+    codeEntry: "",
+    colors: shuffle(COLORS.slice()).slice(0, wireCount),
+    wires: [],
+  };
+  $("setup").classList.add("hidden");
+  $("result").classList.add("hidden");
+  $("keypad").classList.add("hidden");
+  $("game").classList.remove("hidden");
+  drawBomb();
+  showTime();
+  setMessage("");
+  setHint("");
+
+  if (mode === "friend") {
+    state.phase = "pick";
+    $("board").classList.add("picking");
+    setMessage(state.correctCount === 2
+      ? "Kompisen: tryck på 2 sladdar som ska vara rätt. Bombexperten blundar! 🙈"
+      : "Kompisen: tryck på sladden som ska vara rätt. Bombexperten blundar! 🙈");
+  } else {
+    const all = shuffle([...Array(wireCount).keys()]);
+    all.slice(0, state.correctCount).forEach(i => state.correct.add(i));
+    chooseSpecials();
+    beginCountdown();
+  }
+}
+
+// Turbo och frys hamnar på olika fel sladdar. Blinksladden kan vara vilken sladd som helst.
+function chooseSpecials() {
+  const wrong = shuffle([...Array(state.wireCount).keys()].filter(i => !state.correct.has(i)));
+  if (checked("turboInput") && wrong.length) state.turbo = wrong.pop();
+  if (checked("freezeInput") && wrong.length) state.freeze = wrong.pop();
+  if (checked("blinkInput")) startBlink(Math.floor(Math.random() * state.wireCount));
+}
+
+function startBlink(index) {
+  state.blink = index;
+  const paths = document.querySelectorAll(`.wire[data-index="${index}"] .color`);
+  let c = 0;
+  state.blinkTimer = setInterval(() => {
+    c = (c + 1) % COLORS.length;
+    paths.forEach(p => p.setAttribute("stroke", COLORS[c].hex));
+  }, 350);
+}
+
+function pickWire(index, group) {
+  if (state.correct.has(index)) return;
+  state.correct.add(index);
+  sound.pick();
+  if (state.correct.size < state.correctCount) {
+    group.classList.add("picked");
+    setMessage("Bra! Tryck på en sladd till 👆");
+    return;
+  }
+  document.querySelectorAll(".wire.picked").forEach(w => w.classList.remove("picked"));
+  chooseSpecials();
+  state.phase = "handover";
+  $("board").classList.remove("picking");
+  setMessage("");
+  $("handover").classList.remove("hidden");
+}
+
+function beginCountdown() {
+  $("handover").classList.add("hidden");
+  state.phase = "play";
+  state.lastFrame = performance.now();
+  setMessage(state.correctCount === 2 ? "Dubbelbomb! Hitta båda rätta sladdarna ✂️✂️" : "Vilken sladd ska du klippa? ✂️");
+  requestAnimationFrame(loop);
+}
+
+function loop(now) {
+  if (state.phase !== "play" && state.phase !== "code") return;
+  state.remaining = Math.max(0, state.remaining - (now - state.lastFrame) * state.speed);
+  state.lastFrame = now;
+  showTime();
+  if (state.remaining <= 0) return explode("Tiden tog slut!");
+  requestAnimationFrame(loop);
+}
+
+function showTime() {
+  const seconds = Math.ceil(state.remaining / 1000);
+  if (seconds === state.lastShownSecond) return;
+  const first = state.lastShownSecond === null;
+  state.lastShownSecond = seconds;
+  const timer = $("timer");
+  timer.textContent = String(Math.floor(seconds / 60)).padStart(2, "0") + ":" + String(seconds % 60).padStart(2, "0");
+  timer.classList.toggle("danger", seconds <= 5);
+  if (!first && seconds > 0) sound.tick(seconds <= 5);
+}
+
+function onWireClick(index, group) {
+  if (state.phase === "pick") pickWire(index, group);
+  else if (state.phase === "play") cutWire(index, group);
+}
+
+function cutWire(index, group) {
+  if (group.classList.contains("cut")) return;
+  group.classList.add("cut");
+  state.wires[index].cut = true;
+  sound.snip();
+  sparks(group.dataset.midX, group.dataset.midY);
+
+  if (state.correct.has(index)) {
+    if (remainingCorrect().length > 0) {
+      sound.pick();
+      setMessage("✅ Rätt! En rätt sladd kvar att hitta!");
+      return;
+    }
+    return checked("codeInput") ? startCode() : win();
+  }
+
+  if (index === state.freeze) {
+    state.remaining += FREEZE_BONUS_MS;
+    state.lastShownSecond = null;
+    sound.freeze();
+    flashTimer("freeze");
+    setMessage("❄️ Frys-sladden! Du fick 10 extra sekunder!");
+    return;
+  }
+
+  state.triesLeft--;
+  $("light" + state.triesLeft).setAttribute("fill", "#400");
+  shake($("board"), "shake");
+
+  let text = `Fel sladd! ${state.triesLeft} försök kvar 😬`;
+  if (index === state.turbo) {
+    state.speed = 2;
+    $("timer").classList.add("turbo");
+    sound.turbo();
+    text = `⚡ Turbosladden! Nu går tiden dubbelt så fort! ${state.triesLeft} försök kvar`;
+  } else {
+    sound.wrong();
+  }
+  if (state.triesLeft === 0) return explode("Du hade inga försök kvar!");
+  setMessage(text);
+  if (checked("hintsInput")) setHint(makeHint());
+}
+
+function remainingCorrect() {
+  return [...state.correct].filter(i => !state.wires[i].cut);
+}
+
+function wireName(index) {
+  return index === state.blink ? "blinksladden" : `den ${state.wires[index].color.name} sladden`;
+}
+
+// Ledtrådarna är alltid sanna om de rätta sladdarna som är kvar
+// och utesluter minst en sladd som inte är klippt än.
+function makeHint() {
+  const n = state.wireCount;
+  const hints = [
+    {
+      key: "färg",
+      value: w => w.index === state.blink ? null : w.color.warm ? "varm" : "kall",
+      text: { varm: "har en varm färg 🔥", kall: "har en kall färg ❄️" },
+    },
+    {
+      key: "riktning",
+      value: w => w.yR < w.yL ? "upp" : w.yR > w.yL ? "ner" : "rakt",
+      text: { upp: "går uppåt mot höger ↗️", ner: "går nedåt mot höger ↘️", rakt: "går rakt över ➡️" },
+    },
+    {
+      key: "plats",
+      value: w => w.leftPos < (n - 1) / 2 ? "övre" : w.leftPos > (n - 1) / 2 ? "undre" : "mitten",
+      text: {
+        övre: "sitter fast i övre halvan på vänster sida ⬆️",
+        undre: "sitter fast i undre halvan på vänster sida ⬇️",
+        mitten: "sitter fast i mitten på vänster sida ⏺️",
+      },
+    },
+  ];
+  const targets = remainingCorrect().map(i => state.wires[i]);
+  const stillInPlay = state.wires.filter(w => !state.correct.has(w.index) && !w.cut);
+  if (!stillInPlay.length) return "💡 Nu är bara rätt sladd kvar!";
+  const subject = targets.length > 1 ? "Båda rätta sladdarna" : "Rätt sladd";
+
+  const options = [];
+  for (const h of hints) {
+    if (state.hintsUsed.has(h.key)) continue;
+    const values = new Set(targets.map(h.value));
+    if (values.size !== 1 || values.has(null)) continue;
+    const v = h.value(targets[0]);
+    const excludesSomething = stillInPlay.some(w => h.value(w) !== null && h.value(w) !== v);
+    if (excludesSomething) options.push({ h, v });
+  }
+  if (options.length) {
+    const { h, v } = options[Math.floor(Math.random() * options.length)];
+    state.hintsUsed.add(h.key);
+    return `💡 ${subject} ${h.text[v]}`;
+  }
+  // Inget av ovan hjälper – peka ut en sladd som är fel (helst inte frys-sladden).
+  const pool = stillInPlay.filter(w => w.index !== state.freeze);
+  const notIt = (pool.length ? pool : stillInPlay)[Math.floor(Math.random() * (pool.length || stillInPlay.length))];
+  const name = wireName(notIt.index);
+  return `💡 ${name[0].toUpperCase() + name.slice(1)} är fel 🙅`;
+}
+
+// ---------- Kodlås ----------
+function startCode() {
+  state.phase = "code";
+  state.code = Array.from({ length: CODE_LENGTH }, () => Math.floor(Math.random() * 10)).join("");
+  sound.pick();
+  setHint("");
+  $("keypad").classList.remove("hidden");
+  showCode("✅ Rätt sladd! Kom ihåg koden 🧠");
+}
+
+function showCode(text) {
+  state.codeEntry = "";
+  state.codeShowing = true;
+  setKeysEnabled(false);
+  setMessage(text);
+  $("codeDisplay").textContent = state.code;
+  $("codeDisplay").classList.add("showing");
+  setTimeout(() => {
+    if (state.phase !== "code") return;
+    state.codeShowing = false;
+    $("codeDisplay").classList.remove("showing");
+    setKeysEnabled(true);
+    renderCodeEntry();
+    setMessage("Slå in koden! 🔢");
+  }, CODE_SHOW_MS);
+}
+
+function setKeysEnabled(on) {
+  document.querySelectorAll(".keys button").forEach(b => b.disabled = !on);
+}
+
+function renderCodeEntry() {
+  $("codeDisplay").textContent = state.codeEntry.padEnd(CODE_LENGTH, "_");
+}
+
+function pressKey(key) {
+  if (state.phase !== "code" || state.codeShowing) return;
+  sound.key();
+  if (key === "back") state.codeEntry = state.codeEntry.slice(0, -1);
+  else if (state.codeEntry.length < CODE_LENGTH) state.codeEntry += key;
+  renderCodeEntry();
+  if (state.codeEntry.length < CODE_LENGTH) return;
+
+  if (state.codeEntry === state.code) return win();
+  state.triesLeft--;
+  $("light" + state.triesLeft).setAttribute("fill", "#400");
+  sound.wrong();
+  shake($("keypad"), "shake");
+  if (state.triesLeft === 0) return explode("Fel kod!");
+  showCode(`Fel kod! ${state.triesLeft} försök kvar. Titta igen 👀`);
+}
+
+document.querySelectorAll(".keys button[data-key]").forEach(b =>
+  b.addEventListener("click", () => pressKey(b.dataset.key)));
+document.addEventListener("keydown", e => {
+  if (/^[0-9]$/.test(e.key)) pressKey(e.key);
+  else if (e.key === "Backspace") pressKey("back");
+});
+
+// ---------- Slut ----------
+function win() {
+  state.phase = "over";
+  sound.win();
+  $("timer").classList.remove("danger", "turbo", "freeze");
+  $("timer").classList.add("won");
+  $("keypad").classList.add("hidden");
+  setMessage("");
+  setHint("");
+  setTimeout(() => showResult("🎉", "Bomben är desarmerad!", "Snyggt jobbat, bombexpert!"), 700);
+}
+
+function explode(reason) {
+  const wasCode = state.phase === "code";
+  state.phase = "over";
+  sound.boom();
+  const flash = document.createElement("div");
+  flash.id = "flash";
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 1300);
+  shake(document.body, "big-shake");
+  $("keypad").classList.add("hidden");
+  state.correct.forEach(i => document.querySelector(`.wire[data-index="${i}"]`).classList.add("reveal"));
+  setMessage("");
+  setHint("");
+  const names = [...state.correct].map(wireName);
+  const answer = wasCode ? `Koden var ${state.code}.`
+    : names.length > 1 ? `De rätta sladdarna var ${names[0]} och ${names[1]}.`
+    : `Rätt sladd var ${names[0]}.`;
+  setTimeout(() => showResult("💥", "BOOM!", `${reason} ${answer}`), 2200);
+}
+
+function showResult(emoji, title, text) {
+  $("resultEmoji").textContent = emoji;
+  $("resultTitle").textContent = title;
+  $("resultText").textContent = text;
+  $("result").classList.remove("hidden");
+}
+
+function setMessage(text) { $("message").textContent = text; }
+function setHint(text) { $("hint").textContent = text; }
+
+function flashTimer(cls) {
+  $("timer").classList.add(cls);
+  setTimeout(() => $("timer").classList.remove(cls), 1500);
+}
+
+function shake(el, cls) {
+  el.classList.remove(cls);
+  void el.offsetWidth; // starta om animationen
+  el.classList.add(cls);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ---------- Rita bomben ----------
+function el(tag, attrs, parent) {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const k in attrs) node.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(node);
+  return node;
+}
+
+function drawBomb() {
+  const svg = $("board");
+  svg.innerHTML = "";
+
+  // Dynamitstavar bakom lådan
+  for (let i = 0; i < 5; i++) {
+    const x = 230 + i * 70;
+    el("rect", { x, y: 20, width: 60, height: 140, rx: 10, fill: "#c62828", stroke: "#7f1010", "stroke-width": 3 }, svg);
+    el("rect", { x: x + 8, y: 26, width: 10, height: 120, rx: 5, fill: "#ef5350", opacity: .6 }, svg);
+  }
+  el("rect", { x: 220, y: 60, width: 360, height: 22, fill: "#333", opacity: .9 }, svg);
+
+  // Lådan
+  el("rect", { x: 60, y: 130, width: 680, height: 370, rx: 20, fill: "#3b4250", stroke: "#1c2027", "stroke-width": 6 }, svg);
+  [[85, 155], [715, 155], [85, 475], [715, 475]].forEach(([cx, cy]) =>
+    el("circle", { cx, cy, r: 7, fill: "#8a93a3", stroke: "#222", "stroke-width": 2 }, svg));
+
+  // Display
+  el("rect", { x: 280, y: 148, width: 240, height: 74, rx: 8, fill: "#1a0505", stroke: "#000", "stroke-width": 4 }, svg);
+  el("text", { id: "timer", x: 400, y: 202, "text-anchor": "middle", "font-size": 54 }, svg);
+
+  // Försökslampor
+  const label = el("text", { x: 630, y: 165, "text-anchor": "middle", "font-size": 14, fill: "#cfd6e3", "font-weight": 700 }, svg);
+  label.textContent = "FÖRSÖK";
+  const spacing = 26, startX = 630 - (state.totalTries - 1) * spacing / 2;
+  for (let i = 0; i < state.totalTries; i++) {
+    el("circle", { id: "light" + i, cx: startX + i * spacing, cy: 190, r: 9, fill: "#4caf50", stroke: "#111", "stroke-width": 2 }, svg);
+  }
+  const name = el("text", { x: 170, y: 185, "text-anchor": "middle", "font-size": 16, fill: "#cfd6e3", "font-weight": 700 }, svg);
+  name.textContent = "BOMB-O-MATIC 3000";
+  if (state.correctCount === 2) {
+    const dbl = el("text", { x: 170, y: 208, "text-anchor": "middle", "font-size": 15, fill: "#ff6b5e", "font-weight": 800 }, svg);
+    dbl.textContent = "DUBBELBOMB – 2 RÄTTA";
+  }
+
+  // Kopplingsplintar
+  el("rect", { x: 80, y: 235, width: 44, height: 230, rx: 6, fill: "#565f70", stroke: "#222", "stroke-width": 3 }, svg);
+  el("rect", { x: 676, y: 235, width: 44, height: 230, rx: 6, fill: "#565f70", stroke: "#222", "stroke-width": 3 }, svg);
+
+  // Sladdar – höger ände blandas så att sladdarna korsar varandra
+  const n = state.wireCount;
+  const yTop = 255, yBottom = 445;
+  const ys = Array.from({ length: n }, (_, i) => yTop + i * (yBottom - yTop) / (n - 1));
+  const rightYs = shuffle(ys.slice());
+  const xL = 102, xR = 698, xM = 400;
+
+  const wireLayer = el("g", {}, svg);
+  for (let i = 0; i < n; i++) {
+    const yL = ys[i], yR = rightYs[i];
+    const yM = (yL + yR) / 2 + 8 + Math.random() * 14;
+    const color = state.colors[i];
+    state.wires.push({ index: i, yL, yR, leftPos: i, color, cut: false });
+    const g = el("g", { class: "wire", "data-index": i, "data-mid-x": xM, "data-mid-y": yM }, wireLayer);
+
+    const halves = [
+      { cls: "left",  d: `M ${xL} ${yL} C ${xL + 110} ${yL} ${xM - 110} ${yM} ${xM} ${yM}`, origin: `${xL}px ${yL}px` },
+      { cls: "right", d: `M ${xM} ${yM} C ${xM + 110} ${yM} ${xR - 110} ${yR} ${xR} ${yR}`, origin: `${xR}px ${yR}px` },
+    ];
+    for (const h of halves) {
+      const half = el("g", { class: "half " + h.cls }, g);
+      half.style.transformOrigin = h.origin;
+      el("path", { d: h.d, fill: "none", stroke: "#111", "stroke-width": 15, "stroke-linecap": "butt" }, half);
+      el("path", { class: "color", d: h.d, fill: "none", stroke: color.hex, "stroke-width": 10, "stroke-linecap": "butt" }, half);
+      el("path", { d: h.d, fill: "none", stroke: "#fff", "stroke-width": 2.5, opacity: .35, "stroke-linecap": "butt", transform: "translate(0,-2)" }, half);
+      el("circle", { class: "copper", cx: xM, cy: yM, r: 5, fill: "#e0913a", stroke: "#8a4b12", "stroke-width": 1.5 }, half);
+    }
+    // Osynlig bred linje så att sladden är lätt att träffa, även med fingret
+    el("path", { d: halves[0].d + " " + halves[1].d.replace(/^M [^C]+/, ""), fill: "none", stroke: "transparent", "stroke-width": 30 }, g);
+
+    g.addEventListener("click", () => onWireClick(i, g));
+  }
+
+  // Skruvar där sladdarna sitter fast
+  [...ys.map(y => [xL, y]), ...ys.map(y => [xR, y])].forEach(([cx, cy]) =>
+    el("circle", { cx, cy, r: 6, fill: "#b0b8c6", stroke: "#222", "stroke-width": 2 }, svg));
+}
+
+function sparks(x, y) {
+  const svg = $("board");
+  for (let i = 0; i < 10; i++) {
+    const angle = Math.random() * Math.PI * 2, dist = 20 + Math.random() * 30;
+    const s = el("circle", { class: "spark", cx: x, cy: y, r: 2 + Math.random() * 2, fill: Math.random() < .5 ? "#ffeb3b" : "#ff9800" }, svg);
+    s.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+    s.style.setProperty("--dy", Math.sin(angle) * dist + "px");
+    setTimeout(() => s.remove(), 600);
+  }
+}
+
+// ---------- Knappar ----------
+$("startBtn").addEventListener("click", startGame);
+$("againBtn").addEventListener("click", startGame);
+$("goBtn").addEventListener("click", beginCountdown);
+$("settingsBtn").addEventListener("click", () => {
+  state.phase = "over";
+  clearInterval(state.blinkTimer);
+  $("result").classList.add("hidden");
+  $("game").classList.add("hidden");
+  $("setup").classList.remove("hidden");
+});
+</script>
+</body>
+</html>
