@@ -37,26 +37,25 @@
     background: #1d222c;
     border: 2px solid #3a4150;
     border-radius: 20px;
-    padding: 18px 32px;
-    width: min(620px, 94vw);
+    padding: 16px 28px;
+    width: min(820px, 94vw);
     box-shadow: 0 20px 60px rgba(0,0,0,.5);
-    margin: 16px 0;
+    margin: 12px 0;
   }
-  h1 { margin: 0 0 2px; font-size: 2.1rem; text-align: center; }
-  h3 { margin: 4px 0 12px; font-size: 1.1rem; color: #aab; font-weight: 600; }
-  .subtitle { text-align: center; color: #aab; margin: 0 0 12px; }
+  h1 { margin: 0 0 10px; font-size: 2.1rem; text-align: center; }
+  h3 { margin: 4px 0 8px; font-size: 1.1rem; color: #aab; font-weight: 600; }
   /* Rubrik till vänster, reglage till höger – så får allt plats utan att scrolla */
-  .setting { display: grid; grid-template-columns: 220px 1fr; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .setting { display: grid; grid-template-columns: 220px 1fr; align-items: center; gap: 14px; margin-bottom: 8px; }
   .setting label { display: flex; justify-content: space-between; font-size: 1.15rem; }
   @media (max-width: 560px) { .setting { grid-template-columns: 1fr; gap: 4px; } }
   .setting .value { font-weight: 700; color: #ffcc33; }
-  input[type=range] { width: 100%; accent-color: #ffcc33; height: 32px; cursor: pointer; margin: 0; }
+  input[type=range] { width: 100%; accent-color: #ffcc33; height: 30px; cursor: pointer; margin: 0; }
 
   .choice { display: flex; gap: 10px; }
   .choice button {
     flex: 1;
     font-size: 1.1rem;
-    padding: 12px;
+    padding: 10px;
     border-radius: 12px;
     border: 2px solid #3a4150;
     background: #262c38;
@@ -65,20 +64,38 @@
   }
   .choice button.active { border-color: #ffcc33; background: #3a3420; font-weight: 700; }
   .choice.small { gap: 6px; margin: 2px 0 4px 34px; }
-  .choice.small button { padding: 6px 0; font-size: 1rem; border-radius: 9px; }
+  .choice.small button { padding: 5px 0; font-size: 1rem; border-radius: 9px; }
+  .choice.tabs { margin-bottom: 14px; }
+  .choice.tabs button { font-size: 1.25rem; padding: 12px; }
 
-  .extras { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; margin-bottom: 6px; }
-  @media (max-width: 520px) { .extras { grid-template-columns: 1fr; } }
-  .toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 1.05rem; cursor: pointer; padding: 4px 0; }
+  .extras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 14px; margin-bottom: 4px; }
+  @media (max-width: 700px) { .extras { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .extras { grid-template-columns: 1fr; } }
+  .toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 1.02rem; cursor: pointer; padding: 4px 0; }
   .toggle input { width: 24px; height: 24px; margin: 0; accent-color: #ffcc33; cursor: pointer; flex-shrink: 0; }
-  .toggle small { display: block; color: #99a; font-size: .85rem; }
+  .toggle small { display: block; color: #99a; font-size: .82rem; }
+
+  .footer-row { display: flex; gap: 12px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+  .footer-row label { font-size: 1.05rem; }
+  .footer-row input[type=text] {
+    flex: 1; min-width: 140px;
+    font-size: 1.1rem; padding: 9px 12px;
+    border-radius: 10px; border: 2px solid #3a4150;
+    background: #262c38; color: #fff;
+    -webkit-user-select: text; user-select: text;
+  }
+  .small-btn {
+    font-size: 1.05rem; padding: 10px 14px;
+    border-radius: 10px; border: 2px solid #3a4150;
+    background: #262c38; color: #f2f2f2; cursor: pointer;
+  }
 
   .big-btn {
     display: block;
     width: 100%;
     font-size: 1.4rem;
     font-weight: 700;
-    padding: 16px;
+    padding: 15px;
     border: none;
     border-radius: 14px;
     background: #e53935;
@@ -86,10 +103,29 @@
     cursor: pointer;
     box-shadow: 0 6px 0 #9b1f1c;
     transition: transform .05s;
-    margin-top: 10px;
+    margin-top: 12px;
   }
   .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #9b1f1c; }
   .big-btn.secondary { background: #3a4150; box-shadow: 0 6px 0 #232833; margin-top: 14px; }
+  .big-btn.green { background: #2e9e48; box-shadow: 0 6px 0 #1c6a2f; }
+
+  /* ---------- Uppdrag ---------- */
+  .levels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  @media (max-width: 600px) { .levels { grid-template-columns: repeat(2, 1fr); } }
+  .level {
+    border: 2px solid #3a4150; border-radius: 14px;
+    background: #262c38; color: #f2f2f2;
+    padding: 12px 6px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .level .num { font-size: 1.8rem; font-weight: 800; }
+  .level .lname { font-size: .9rem; color: #ccd; min-height: 2.3em; }
+  .level .stars { font-size: 1.1rem; letter-spacing: 2px; }
+  .level.done { border-color: #4caf50; }
+  .level.next { border-color: #ffcc33; background: #3a3420; animation: glowBtn 1s ease-in-out infinite alternate; }
+  .level:disabled { opacity: .4; cursor: default; }
+  @keyframes glowBtn { to { box-shadow: 0 0 16px rgba(255,204,51,.5); } }
+  .progress { text-align: center; color: #aab; margin: 12px 0 0; font-size: 1.05rem; }
 
   /* ---------- Spelet ---------- */
   /* Bredden begränsas också av skärmhöjden så att allt får plats på en surfplatta */
@@ -97,10 +133,19 @@
   #game svg { width: 100%; height: auto; display: block; }
   #message { font-size: 1.5rem; font-weight: 700; min-height: 1.4em; margin-top: 6px; }
   #hint { font-size: 1.25rem; color: #ffcc33; min-height: 1.4em; margin-top: 4px; }
+  #levelTag { position: absolute; right: 2%; top: 3%; font-weight: 700; color: #cfd6e3; font-size: 1.05rem; text-align: right; }
+  #toolBtn {
+    position: absolute; left: 2%; top: 3%;
+    font-size: 1.2rem; font-weight: 700;
+    padding: 10px 16px; border-radius: 12px;
+    border: 3px solid #ffcc33; background: #3a3420; color: #fff;
+    cursor: pointer; box-shadow: 0 4px 0 #8a6d12;
+  }
+  #toolBtn:disabled { border-color: #3a4150; background: #262c38; box-shadow: none; opacity: .5; cursor: default; }
 
   .wire { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='2' y='32' font-size='32'>✂️</text></svg>") 20 20, pointer; }
   .picking .wire { cursor: pointer; }
-  .wire .half { transition: transform .35s ease-in; transform-box: view-box; }
+  .wire .half { transition: transform .35s ease-in, opacity .4s; transform-box: view-box; }
   @media (hover: hover) {
     .wire:not(.cut):hover .half { filter: drop-shadow(0 0 6px rgba(255,255,255,.8)); }
   }
@@ -110,7 +155,8 @@
   .wire.cut .left  { transform: rotate(6deg) scale(.88); }
   .wire.cut .right { transform: rotate(-6deg) scale(.88); }
   .wire.picked .half { filter: drop-shadow(0 0 8px #ffcc33); }
-  .wire.reveal .half { animation: glow .6s ease-in-out infinite alternate; }
+  .wire.lamped .half { opacity: .3; }
+  .wire.reveal .half { opacity: 1; animation: glow .6s ease-in-out infinite alternate; }
   @keyframes glow {
     from { filter: drop-shadow(0 0 2px #fff); }
     to   { filter: drop-shadow(0 0 14px #fff); }
@@ -196,81 +242,156 @@
     position: fixed; inset: 0;
     display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,.6);
+    overflow-y: auto;
   }
-  #handover { background: rgba(10,12,18,.97); }
+  #handover, #briefing { background: rgba(10,12,18,.97); }
   .overlay .card { text-align: center; animation: popCard .4s ease-out; width: min(520px, 92vw); }
   .overlay .emoji { font-size: 6rem; line-height: 1; }
   .overlay h2 { font-size: 2.4rem; margin: 10px 0; }
   .overlay p { font-size: 1.2rem; color: #ccd; margin: 0 0 24px; }
+  #resultStars { font-size: 3rem; letter-spacing: 6px; margin: 0 0 6px; }
   @keyframes pop { from { transform: translateX(-50%) scale(.5); opacity: 0; } }
   @keyframes popCard { from { transform: scale(.5); opacity: 0; } }
+
+  /* ---------- Agentbrev och verktyg ---------- */
+  #briefing .card { width: min(680px, 94vw); }
+  .letter {
+    position: relative;
+    background: #f1e6c8;
+    color: #2b2418;
+    font-family: "Courier New", monospace;
+    font-size: 1.12rem;
+    line-height: 1.45;
+    text-align: left;
+    white-space: pre-line;
+    padding: 22px 26px;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    transform: rotate(-.6deg);
+    margin-bottom: 14px;
+  }
+  .stamp {
+    position: absolute; right: 18px; top: 14px;
+    border: 3px solid #c62828; color: #c62828;
+    font-weight: 800; font-size: 1rem; letter-spacing: 2px;
+    padding: 4px 8px; transform: rotate(8deg); opacity: .85;
+    font-family: system-ui, sans-serif;
+  }
+  .tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 520px) { .tools { grid-template-columns: 1fr; } }
+  .tools button {
+    border: 2px solid #3a4150; border-radius: 14px;
+    background: #262c38; color: #f2f2f2; cursor: pointer;
+    padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .tools button:hover { border-color: #ffcc33; }
+  .tools .ticon { font-size: 2.6rem; line-height: 1; }
+  .tools .tname { font-size: 1.15rem; font-weight: 700; }
+  .tools .tdesc { font-size: .88rem; color: #aab; }
+
+  /* ---------- Ljudstudion ---------- */
+  #studio .card { width: min(560px, 94vw); }
+  .sound-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid #2f3542; text-align: left; }
+  .sound-row .sname { flex: 1; font-size: 1.15rem; }
+  .sound-row .sname small { display: block; color: #99a; font-size: .85rem; }
+  .sound-row button { font-size: 1rem; padding: 9px 11px; }
+  .sound-row button.recording { background: #c62828; border-color: #ff6b5e; animation: blink 1s steps(1) infinite; }
+  #studioMsg { color: #ffcc33; min-height: 1.3em; margin: 10px 0 0; font-size: 1rem; }
 </style>
 </head>
 <body>
 
-<!-- Inställningar -->
+<!-- Startsidan -->
 <div id="setup" class="card">
   <h1>💣 Bomben</h1>
-  <p class="subtitle">Klipp rätt sladd innan bomben smäller!</p>
+  <div class="choice tabs" id="playChoice">
+    <button data-play="free" class="active">🎮 Fritt spel</button>
+    <button data-play="mission">🗺️ Uppdrag</button>
+  </div>
 
-  <div class="setting">
-    <label>⏱️ Tid <span class="value" id="timeValue"></span></label>
-    <input type="range" id="timeInput" min="10" max="180" step="5" value="30">
-  </div>
-  <div class="setting">
-    <label>🔌 Antal sladdar <span class="value" id="wiresValue"></span></label>
-    <input type="range" id="wiresInput" min="3" max="8" step="1" value="5">
-  </div>
-  <div class="setting">
-    <label>✂️ Antal försök <span class="value" id="triesValue"></span></label>
-    <input type="range" id="triesInput" min="1" max="4" step="1" value="2">
-  </div>
-  <div class="setting">
-    <label>🎯 Vem väljer rätt sladd?</label>
-    <div class="choice" id="modeChoice">
-      <button data-mode="computer" class="active">🤖 Datorn</button>
-      <button data-mode="friend">🙋 En kompis</button>
+  <div id="freePanel">
+    <div class="setting">
+      <label>⏱️ Tid <span class="value" id="timeValue"></span></label>
+      <input type="range" id="timeInput" min="10" max="180" step="5" value="30">
     </div>
-  </div>
-
-  <h3>Extra utmaningar</h3>
-  <div class="extras">
-    <label class="toggle">
-      <input type="checkbox" id="hintsInput" checked>
-      <span>💡 Ledtrådar<small>Ett fel klipp ger en ledtråd.</small></span>
-    </label>
-    <div>
-      <label class="toggle">
-        <input type="checkbox" id="codeInput">
-        <span>🔢 Kodlås<small>Efter rätt sladd: kom ihåg koden och slå in den.</small></span>
-      </label>
-      <div class="choice small hidden" id="digitsChoice" aria-label="Antal siffror i koden">
-        <button data-digits="3" class="active">3</button>
-        <button data-digits="4">4</button>
-        <button data-digits="5">5</button>
-        <button data-digits="6">6</button>
+    <div class="setting">
+      <label>🔌 Antal sladdar <span class="value" id="wiresValue"></span></label>
+      <input type="range" id="wiresInput" min="3" max="8" step="1" value="5">
+    </div>
+    <div class="setting">
+      <label>✂️ Antal försök <span class="value" id="triesValue"></span></label>
+      <input type="range" id="triesInput" min="1" max="4" step="1" value="2">
+    </div>
+    <div class="setting">
+      <label>🎯 Vem väljer rätt sladd?</label>
+      <div class="choice" id="modeChoice">
+        <button data-mode="computer" class="active">🤖 Datorn</button>
+        <button data-mode="friend">🙋 En kompis</button>
       </div>
     </div>
-    <label class="toggle">
-      <input type="checkbox" id="doubleInput">
-      <span>💣💣 Dubbelbomb<small>Två sladdar är rätt – klipp båda!</small></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" id="turboInput">
-      <span>⚡ Turbosladd<small>En fel sladd gör att tiden går dubbelt så fort.</small></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" id="superTurboInput">
-      <span>🚀 Superturbosladd<small>En fel sladd gör att tiden går fyra gånger så fort!</small></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" id="freezeInput">
-      <span>❄️ Frys-sladd<small>En sladd ger 10 extra sekunder.</small></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" id="blinkInput">
-      <span>🌈 Blinksladd<small>En sladd byter färg hela tiden.</small></span>
-    </label>
+
+    <h3>Extra utmaningar</h3>
+    <div class="extras">
+      <label class="toggle">
+        <input type="checkbox" id="hintsInput" checked>
+        <span>💡 Ledtrådar<small>Ett fel klipp ger en ledtråd.</small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="letterInput">
+        <span>🕵️ Agentbrev<small>Ett hemligt brev med ett tips innan start.</small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="toolsInput">
+        <span>🧰 Verktyg<small>Välj ficklampa, paus eller sköld.</small></span>
+      </label>
+      <div>
+        <label class="toggle">
+          <input type="checkbox" id="codeInput">
+          <span>🔢 Kodlås<small>Kom ihåg koden och slå in den.</small></span>
+        </label>
+        <div class="choice small hidden" id="digitsChoice" aria-label="Antal siffror i koden">
+          <button data-digits="3" class="active">3</button>
+          <button data-digits="4">4</button>
+          <button data-digits="5">5</button>
+          <button data-digits="6">6</button>
+        </div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="doubleInput">
+        <span>💣💣 Dubbelbomb<small>Två sladdar är rätt.</small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="turboInput">
+        <span>⚡ Turbosladd<small>Tiden går dubbelt så fort.</small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="superTurboInput">
+        <span>🚀 Superturbosladd<small>Tiden går fyra gånger så fort!</small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="freezeInput">
+        <span>❄️ Frys-sladd<small>Ger 10 extra sekunder.</small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="blinkInput">
+        <span>🌈 Blinksladd<small>Byter färg hela tiden.</small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="snakeInput">
+        <span>🐍 Ormsladd<small>Slingrar sig – svår att träffa!</small></span>
+      </label>
+    </div>
+  </div>
+
+  <div id="missionPanel" class="hidden">
+    <div class="levels" id="levels"></div>
+    <p class="progress" id="progress"></p>
+  </div>
+
+  <div class="footer-row">
+    <label for="agentName">🕵️ Agentnamn</label>
+    <input type="text" id="agentName" maxlength="16" placeholder="Skriv ditt namn" autocomplete="off">
+    <button class="small-btn" id="studioBtn">🎤 Egna ljud</button>
   </div>
 
   <button class="big-btn" id="startBtn">Starta bomben!</button>
@@ -279,6 +400,8 @@
 <!-- Spelplan -->
 <div id="game" class="hidden">
   <svg id="board" viewBox="0 0 800 520"></svg>
+  <button id="toolBtn" class="hidden"></button>
+  <div id="levelTag" class="hidden"></div>
   <div id="keypad" class="hidden">
     <div id="codeDisplay"></div>
     <div class="keys">
@@ -298,7 +421,23 @@
     <div class="emoji">🤫</div>
     <h2>Hemligt val klart!</h2>
     <p>Lämna nu över till bombexperten.</p>
-    <button class="big-btn" id="goBtn">Jag är redo – starta nedräkningen!</button>
+    <button class="big-btn" id="goBtn">Jag är redo!</button>
+  </div>
+</div>
+
+<!-- Agentbrev och val av verktyg -->
+<div id="briefing" class="overlay hidden">
+  <div class="card">
+    <div id="letterBox" class="letter"><span class="stamp">TOPPHEMLIGT</span><span id="letterText"></span></div>
+    <div id="toolPick">
+      <h3>Välj ett verktyg till uppdraget:</h3>
+      <div class="tools">
+        <button data-tool="lamp"><span class="ticon">🔦</span><span class="tname">Ficklampa</span><span class="tdesc">Visar en sladd som är fel.</span></button>
+        <button data-tool="pause"><span class="ticon">⏸️</span><span class="tname">Paus</span><span class="tdesc">Stoppar tiden i 5 sekunder.</span></button>
+        <button data-tool="shield"><span class="ticon">🛡️</span><span class="tname">Sköld</span><span class="tdesc">Ger ett extra försök.</span></button>
+      </div>
+    </div>
+    <button class="big-btn" id="acceptBtn">Uppdraget accepterat!</button>
   </div>
 </div>
 
@@ -307,9 +446,22 @@
   <div class="card">
     <div class="emoji" id="resultEmoji"></div>
     <h2 id="resultTitle"></h2>
+    <div id="resultStars" class="hidden"></div>
     <p id="resultText"></p>
+    <button class="big-btn green hidden" id="nextBtn">Nästa uppdrag ▶</button>
     <button class="big-btn" id="againBtn">Spela igen</button>
     <button class="big-btn secondary" id="settingsBtn">Ändra inställningar</button>
+  </div>
+</div>
+
+<!-- Ljudstudion -->
+<div id="studio" class="overlay hidden">
+  <div class="card">
+    <h2>🎤 Ljudstudion</h2>
+    <p>Spela in egna ljud till spelet. Tryck på ⏺️, säg något och tryck igen för att stoppa (max 4 sekunder).</p>
+    <div id="soundRows"></div>
+    <div id="studioMsg"></div>
+    <button class="big-btn secondary" id="studioClose">Klar</button>
   </div>
 </div>
 
@@ -325,16 +477,62 @@ const COLORS = [
   { name: "rosa",   hex: "#f06292", warm: true },
 ];
 const FREEZE_BONUS_MS = 10000;
+const PAUSE_MS = 5000;
 const CODE_SHOW_MS_PER_DIGIT = 1000;
+const MAX_RECORDING_MS = 4000;
+
+// Platser för agentbrevet i fritt spel
+const PLACES = [
+  "En bomb har hittats under farmors soffa!",
+  "Någon har gömt en bomb i en pepparkakshus-fabrik.",
+  "Det tickar i en glassbil mitt i stan.",
+  "En bomb ligger i målburen på fotbollsplanen.",
+  "Bomben sitter på en rymdstation långt ute i rymden.",
+  "Det tickar inne i en jättestor chokladkaka.",
+];
+
+// Uppdragsläget: tio bomber som blir svårare och svårare
+const LEVELS = [
+  { name: "Övningsbomben", place: "Bomben står på övningsbanan i agentskolan. Det är bara en övning – tror vi.", time: 40, wires: 3, tries: 2 },
+  { name: "Matsalen", place: "Någon har gömt en bomb i skolans matsal, precis innan fiskpinnarna!", time: 35, wires: 4, tries: 2, tools: true },
+  { name: "Glassbilen", place: "Glassbilen spelar sin melodi – men något tickar i frysboxen.", time: 35, wires: 4, tries: 2, tools: true, freeze: true },
+  { name: "Fotbollsplanen", place: "Bomben ligger i målburen och matchen börjar snart.", time: 30, wires: 5, tries: 2, tools: true, turbo: true },
+  { name: "Banken", place: "Bomben sitter på bankvalvet, och den har ett kodlås.", time: 35, wires: 5, tries: 2, tools: true, code: true, codeLength: 3 },
+  { name: "Tivolit", place: "Mitt på tivolit blinkar och snurrar allt – även sladdarna.", time: 35, wires: 6, tries: 3, tools: true, blink: true, turbo: true },
+  { name: "Djungeln", place: "Djupt inne i djungeln slingrar sig något mellan sladdarna.", time: 35, wires: 6, tries: 3, tools: true, snake: true, freeze: true },
+  { name: "Raketbasen", place: "Raketen ska skjutas upp om några minuter!", time: 35, wires: 7, tries: 3, tools: true, double: true, superTurbo: true },
+  { name: "Slottet", place: "Bomben står i kungens tronsal.", time: 40, wires: 7, tries: 3, tools: true, double: true, blink: true, snake: true, code: true, codeLength: 4 },
+  { name: "Månbasen", place: "Det sista uppdraget – på månen! Här kan allt hända.", time: 45, wires: 8, tries: 3, tools: true, double: true, turbo: true, superTurbo: true, snake: true, blink: true, code: true, codeLength: 5 },
+];
+
+const SOUND_SLOTS = [
+  { key: "boom",  name: "💥 Explosion", desc: "När bomben smäller" },
+  { key: "win",   name: "🎉 Vinst",     desc: "När bomben är desarmerad" },
+  { key: "wrong", name: "😬 Fel sladd", desc: "När man klipper fel" },
+];
 
 const $ = id => document.getElementById(id);
 const checked = id => $(id).checked;
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-// ---------- Inställningar ----------
+// ---------- Sparat i webbläsaren ----------
+const store = {
+  get(key, fallback) {
+    try { const v = localStorage.getItem("bomben." + key); return v === null ? fallback : JSON.parse(v); }
+    catch { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem("bomben." + key, JSON.stringify(value)); return true; }
+    catch { return false; }
+  },
+  remove(key) { try { localStorage.removeItem("bomben." + key); } catch {} },
+};
+
+// ---------- Startsidan ----------
 const timeInput = $("timeInput"), wiresInput = $("wiresInput"), triesInput = $("triesInput");
 let mode = "computer";
 let codeLength = 3;
+let playMode = "free";
 
 function formatSeconds(s) {
   if (s < 60) return s + " sekunder";
@@ -353,19 +551,86 @@ function updateLabels() {
 [timeInput, wiresInput, triesInput, $("doubleInput")].forEach(el => el.addEventListener("input", updateLabels));
 updateLabels();
 
+function setupChoice(containerId, onPick) {
+  const buttons = document.querySelectorAll(`#${containerId} button`);
+  buttons.forEach(btn => btn.addEventListener("click", () => {
+    buttons.forEach(b => b.classList.toggle("active", b === btn));
+    onPick(btn.dataset);
+  }));
+}
+setupChoice("modeChoice", d => mode = d.mode);
+setupChoice("digitsChoice", d => codeLength = +d.digits);
+setupChoice("playChoice", d => showPlayMode(d.play));
 $("codeInput").addEventListener("input", () => $("digitsChoice").classList.toggle("hidden", !checked("codeInput")));
-document.querySelectorAll("#digitsChoice button").forEach(btn => btn.addEventListener("click", () => {
-  codeLength = +btn.dataset.digits;
-  document.querySelectorAll("#digitsChoice button").forEach(b => b.classList.toggle("active", b === btn));
-}));
 
-document.querySelectorAll("#modeChoice button").forEach(btn => btn.addEventListener("click", () => {
-  mode = btn.dataset.mode;
-  document.querySelectorAll("#modeChoice button").forEach(b => b.classList.toggle("active", b === btn));
-}));
+function showPlayMode(which) {
+  playMode = which;
+  document.querySelectorAll("#playChoice button").forEach(b => b.classList.toggle("active", b.dataset.play === which));
+  $("freePanel").classList.toggle("hidden", which !== "free");
+  $("missionPanel").classList.toggle("hidden", which !== "mission");
+  $("startBtn").classList.toggle("hidden", which !== "free");
+  if (which === "mission") renderLevels();
+}
+
+$("agentName").value = store.get("agent", "");
+$("agentName").addEventListener("input", () => store.set("agent", $("agentName").value.trim()));
+const agentName = () => $("agentName").value.trim() || "X";
+
+function readFreeConfig() {
+  return {
+    time: +timeInput.value,
+    wires: +wiresInput.value,
+    tries: +triesInput.value,
+    friend: mode === "friend",
+    hints: checked("hintsInput"),
+    letter: checked("letterInput"),
+    tools: checked("toolsInput"),
+    code: checked("codeInput"),
+    codeLength,
+    double: checked("doubleInput"),
+    turbo: checked("turboInput"),
+    superTurbo: checked("superTurboInput"),
+    freeze: checked("freezeInput"),
+    blink: checked("blinkInput"),
+    snake: checked("snakeInput"),
+    place: PLACES[Math.floor(Math.random() * PLACES.length)],
+  };
+}
+
+// ---------- Uppdrag ----------
+const missionStars = () => store.get("stjarnor", []);
+
+function renderLevels() {
+  const stars = missionStars();
+  const box = $("levels");
+  box.innerHTML = "";
+  LEVELS.forEach((level, i) => {
+    const unlocked = i === 0 || stars[i - 1] > 0;
+    const btn = document.createElement("button");
+    btn.className = "level" + (stars[i] ? " done" : unlocked ? " next" : "");
+    btn.disabled = !unlocked;
+    btn.dataset.level = i;
+    const s = stars[i] || 0;
+    btn.innerHTML = `<span class="num">${unlocked ? i + 1 : "🔒"}</span><span class="lname"></span><span class="stars">${"⭐".repeat(s)}${"☆".repeat(3 - s)}</span>`;
+    btn.querySelector(".lname").textContent = level.name;
+    btn.addEventListener("click", () => startMission(i));
+    box.appendChild(btn);
+  });
+  const total = stars.reduce((a, b) => a + (b || 0), 0);
+  $("progress").textContent = `⭐ ${total} av ${LEVELS.length * 3} stjärnor`;
+}
+
+function startMission(i) {
+  const level = LEVELS[i];
+  startGame({ hints: true, letter: true, codeLength: 3, ...level }, i);
+}
 
 // ---------- Ljud ----------
 let audio;
+function ensureAudio() {
+  if (!audio) audio = new AudioContext();
+  audio.resume();
+}
 function tone(freq, duration, type = "sine", volume = 0.2, delay = 0) {
   const t = audio.currentTime + delay;
   const osc = audio.createOscillator(), gain = audio.createGain();
@@ -394,80 +659,126 @@ function noise(duration, filterType, freqStart, freqEnd, volume) {
   src.connect(filter).connect(gain).connect(audio.destination);
   src.start(t);
 }
+
+// Egna inspelade ljud ersätter de inbyggda när de finns
+const customSounds = {}; // key → { url, buffer }
+
+function dataUrlToArrayBuffer(url) {
+  const bin = atob(url.split(",")[1]);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+async function loadCustomSounds() {
+  for (const { key } of SOUND_SLOTS) {
+    const url = store.get("ljud." + key, null);
+    if (!url) { delete customSounds[key]; continue; }
+    if (customSounds[key]?.url === url) continue;
+    try {
+      customSounds[key] = { url, buffer: await audio.decodeAudioData(dataUrlToArrayBuffer(url)) };
+    } catch {
+      delete customSounds[key];
+    }
+  }
+}
+
+function playCustom(key) {
+  const sound = customSounds[key];
+  if (!sound) return false;
+  const src = audio.createBufferSource();
+  src.buffer = sound.buffer;
+  src.connect(audio.destination);
+  src.start();
+  return true;
+}
+
 const sound = {
   tick:   urgent => tone(urgent ? 1400 : 1000, 0.04, "square", 0.05),
   snip:   () => noise(0.08, "highpass", 4000, 2000, 0.6),
-  wrong:  () => tone(110, 0.4, "sawtooth", 0.15),
+  wrong:  () => playCustom("wrong") || tone(110, 0.4, "sawtooth", 0.15),
   turbo:  () => [400, 600, 800, 1000, 1200].forEach((f, i) => tone(f, 0.12, "square", 0.08, i * 0.06)),
   superTurbo: () => [300, 450, 600, 800, 1000, 1300, 1600, 2000].forEach((f, i) => tone(f, 0.1, "sawtooth", 0.08, i * 0.04)),
   freeze: () => [1568, 1319, 1047, 1319, 1568].forEach((f, i) => tone(f, 0.25, "sine", 0.12, i * 0.07)),
   pick:   () => tone(660, 0.15, "triangle", 0.2),
   key:    () => tone(880, 0.06, "square", 0.06),
-  boom:   () => { noise(2.0, "lowpass", 1200, 60, 1.0); tone(55, 1.2, "sine", 0.8); },
-  win:    () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.35, "triangle", 0.2, i * 0.12)),
+  boom:   () => playCustom("boom") || (noise(2.0, "lowpass", 1200, 60, 1.0), tone(55, 1.2, "sine", 0.8)),
+  win:    () => playCustom("win") || [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.35, "triangle", 0.2, i * 0.12)),
 };
 
 // ---------- Spelet ----------
-// phase: "pick" (kompisen väljer), "handover", "play" (klipp sladdar), "code" (kodlåset), "over"
+// phase: "pick" (kompisen väljer), "handover", "briefing" (agentbrev/verktyg),
+//        "play" (klipp sladdar), "code" (kodlås), "over"
 let state;
 
-function startGame() {
-  if (!audio) audio = new AudioContext();
-  audio.resume();
+function startGame(cfg, level = null) {
+  ensureAudio();
+  loadCustomSounds();
   if (state) clearInterval(state.blinkTimer);
-  const wireCount = +wiresInput.value;
   state = {
+    cfg,
+    level,
     phase: "over",
-    wireCount,
-    correctCount: checked("doubleInput") ? 2 : 1,
+    wireCount: cfg.wires,
+    correctCount: cfg.double ? 2 : 1,
     correct: new Set(),
     turbo: null,
     superTurbo: null,
     freeze: null,
     blink: null,
+    snake: null,
     blinkTimer: null,
-    triesLeft: +triesInput.value,
-    totalTries: +triesInput.value,
-    remaining: +timeInput.value * 1000,
+    tool: null,
+    pauseUntil: 0,
+    shieldLight: null,
+    triesLeft: cfg.tries,
+    totalTries: cfg.tries,
+    remaining: cfg.time * 1000,
     speed: 1,
     lastFrame: null,
     lastShownSecond: null,
     hintsUsed: new Set(),
     code: "",
     codeEntry: "",
-    colors: shuffle(COLORS.slice()).slice(0, wireCount),
+    colors: shuffle(COLORS.slice()).slice(0, cfg.wires),
     wires: [],
   };
   $("setup").classList.add("hidden");
   $("result").classList.add("hidden");
   $("keypad").classList.add("hidden");
+  $("toolBtn").classList.add("hidden");
   $("game").classList.remove("hidden");
+  $("levelTag").classList.toggle("hidden", level === null);
+  if (level !== null) $("levelTag").textContent = `Uppdrag ${level + 1}: ${LEVELS[level].name}`;
   drawBomb();
   showTime();
   setMessage("");
   setHint("");
 
-  if (mode === "friend") {
+  if (cfg.friend) {
     state.phase = "pick";
     $("board").classList.add("picking");
     setMessage(state.correctCount === 2
       ? "Kompisen: tryck på 2 sladdar som ska vara rätt. Bombexperten blundar! 🙈"
       : "Kompisen: tryck på sladden som ska vara rätt. Bombexperten blundar! 🙈");
   } else {
-    const all = shuffle([...Array(wireCount).keys()]);
+    const all = shuffle([...Array(cfg.wires).keys()]);
     all.slice(0, state.correctCount).forEach(i => state.correct.add(i));
     chooseSpecials();
-    beginCountdown();
+    afterSecretChosen();
   }
 }
 
-// Turbo, superturbo och frys hamnar på olika fel sladdar. Blinksladden kan vara vilken sladd som helst.
+// Turbo, superturbo och frys hamnar på olika fel sladdar.
+// Blinksladden och ormsladden kan vara vilken sladd som helst.
 function chooseSpecials() {
+  const cfg = state.cfg;
   const wrong = shuffle([...Array(state.wireCount).keys()].filter(i => !state.correct.has(i)));
-  if (checked("turboInput") && wrong.length) state.turbo = wrong.pop();
-  if (checked("superTurboInput") && wrong.length) state.superTurbo = wrong.pop();
-  if (checked("freezeInput") && wrong.length) state.freeze = wrong.pop();
-  if (checked("blinkInput")) startBlink(Math.floor(Math.random() * state.wireCount));
+  if (cfg.turbo && wrong.length) state.turbo = wrong.pop();
+  if (cfg.superTurbo && wrong.length) state.superTurbo = wrong.pop();
+  if (cfg.freeze && wrong.length) state.freeze = wrong.pop();
+  if (cfg.blink) startBlink(Math.floor(Math.random() * state.wireCount));
+  if (cfg.snake) state.snake = Math.floor(Math.random() * state.wireCount);
 }
 
 function startBlink(index) {
@@ -497,8 +808,89 @@ function pickWire(index, group) {
   $("handover").classList.remove("hidden");
 }
 
-function beginCountdown() {
+function afterSecretChosen() {
   $("handover").classList.add("hidden");
+  if (state.cfg.letter || state.cfg.tools) showBriefing();
+  else beginCountdown();
+}
+
+// ---------- Agentbrev och verktyg ----------
+function showBriefing() {
+  state.phase = "briefing";
+  const letter = !!state.cfg.letter, tools = !!state.cfg.tools;
+  $("letterBox").classList.toggle("hidden", !letter);
+  if (letter) $("letterText").textContent = buildLetter();
+  $("toolPick").classList.toggle("hidden", !tools);
+  $("acceptBtn").classList.toggle("hidden", tools);
+  $("briefing").classList.remove("hidden");
+}
+
+function buildLetter() {
+  const cfg = state.cfg;
+  const lines = [`Agent ${agentName()}!`, "", cfg.place];
+  lines.push(cfg.double
+    ? `Bomben har ${cfg.wires} sladdar och TVÅ av dem är rätt.`
+    : `Bomben har ${cfg.wires} sladdar.`);
+  if (cfg.turbo) lines.push("⚡ Se upp för turbosladden!");
+  if (cfg.superTurbo) lines.push("🚀 Det finns en superturbosladd!");
+  if (cfg.freeze) lines.push("❄️ En frys-sladd ger extra tid.");
+  if (cfg.blink) lines.push("🌈 En sladd byter färg hela tiden.");
+  if (cfg.snake) lines.push("🐍 En sladd slingrar sig som en orm.");
+  if (cfg.code) lines.push(`🔢 Bomben har ett kodlås med ${cfg.codeLength} siffror.`);
+  const wrong = state.wires.filter(w => !state.correct.has(w.index) && w.index !== state.freeze);
+  if (wrong.length) {
+    const tip = wrong[Math.floor(Math.random() * wrong.length)];
+    state.letterTip = tip.index;
+    lines.push("", `🔎 Tips från högkvarteret: ${wireName(tip.index)} är INTE rätt.`);
+  }
+  lines.push("", `Du har ${formatSeconds(cfg.time)} på dig. Lycka till!`, "/ Chefen");
+  return lines.join("\n");
+}
+
+const TOOLS = {
+  lamp:   { label: "🔦 Ficklampa" },
+  pause:  { label: "⏸️ Paus" },
+  shield: { label: "🛡️ Sköld" },
+};
+
+function chooseTool(tool) {
+  state.tool = tool;
+  if (tool === "shield") {
+    state.triesLeft++;
+    state.totalTries++;
+    state.shieldLight = state.totalTries - 1;
+    drawLights();
+  } else {
+    $("toolBtn").textContent = TOOLS[tool].label;
+    $("toolBtn").disabled = false;
+    $("toolBtn").classList.remove("hidden");
+  }
+  $("briefing").classList.add("hidden");
+  beginCountdown();
+}
+
+function useTool() {
+  if (state.phase !== "play" || $("toolBtn").disabled) return;
+  $("toolBtn").disabled = true;
+  if (state.tool === "lamp") {
+    const candidates = state.wires.filter(w => !state.correct.has(w.index) && !w.cut && w.index !== state.freeze);
+    const pool = candidates.length ? candidates : state.wires.filter(w => !state.correct.has(w.index) && !w.cut);
+    if (!pool.length) return setHint("🔦 Det finns inga fel sladdar kvar!");
+    const target = pool[Math.floor(Math.random() * pool.length)];
+    target.group.classList.add("lamped");
+    sound.pick();
+    setHint(`🔦 Ficklampan visar: ${wireName(target.index)} är fel!`);
+  } else if (state.tool === "pause") {
+    state.pauseUntil = performance.now() + PAUSE_MS;
+    $("timer").classList.add("freeze");
+    setTimeout(() => $("timer").classList.remove("freeze"), PAUSE_MS);
+    sound.freeze();
+    setHint("⏸️ Tiden står still i 5 sekunder!");
+  }
+}
+
+// ---------- Nedräkningen ----------
+function beginCountdown() {
   state.phase = "play";
   state.lastFrame = performance.now();
   setMessage(state.correctCount === 2 ? "Dubbelbomb! Hitta båda rätta sladdarna ✂️✂️" : "Vilken sladd ska du klippa? ✂️");
@@ -507,9 +899,12 @@ function beginCountdown() {
 
 function loop(now) {
   if (state.phase !== "play" && state.phase !== "code") return;
-  state.remaining = Math.max(0, state.remaining - (now - state.lastFrame) * state.speed);
+  if (now >= state.pauseUntil) {
+    state.remaining = Math.max(0, state.remaining - (now - state.lastFrame) * state.speed);
+  }
   state.lastFrame = now;
   showTime();
+  if (state.snake !== null && state.phase === "play") wiggleSnake(now);
   if (state.remaining <= 0) return explode("Tiden tog slut!");
   requestAnimationFrame(loop);
 }
@@ -543,7 +938,7 @@ function cutWire(index, group) {
       setMessage("✅ Rätt! En rätt sladd kvar att hitta!");
       return;
     }
-    return checked("codeInput") ? startCode() : win();
+    return state.cfg.code ? startCode() : win();
   }
 
   if (index === state.freeze) {
@@ -575,7 +970,7 @@ function cutWire(index, group) {
   }
   if (state.triesLeft === 0) return explode("Du hade inga försök kvar!");
   setMessage(text);
-  if (checked("hintsInput")) setHint(makeHint());
+  if (state.cfg.hints) setHint(makeHint());
 }
 
 function remainingCorrect() {
@@ -640,9 +1035,10 @@ function makeHint() {
 // ---------- Kodlås ----------
 function startCode() {
   state.phase = "code";
-  state.code = Array.from({ length: codeLength }, () => Math.floor(Math.random() * 10)).join("");
+  state.code = Array.from({ length: state.cfg.codeLength }, () => Math.floor(Math.random() * 10)).join("");
   sound.pick();
   setHint("");
+  $("toolBtn").classList.add("hidden");
   $("keypad").classList.remove("hidden");
   showCode("✅ Rätt sladd! Kom ihåg koden 🧠");
 }
@@ -673,7 +1069,7 @@ function renderCodeEntry() {
 }
 
 function pressKey(key) {
-  if (state.phase !== "code" || state.codeShowing) return;
+  if (!state || state.phase !== "code" || state.codeShowing) return;
   sound.key();
   if (key === "back") state.codeEntry = state.codeEntry.slice(0, -1);
   else if (state.codeEntry.length < state.code.length) state.codeEntry += key;
@@ -692,6 +1088,7 @@ function pressKey(key) {
 document.querySelectorAll(".keys button[data-key]").forEach(b =>
   b.addEventListener("click", () => pressKey(b.dataset.key)));
 document.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT") return;
   if (/^[0-9]$/.test(e.key)) pressKey(e.key);
   else if (e.key === "Backspace") pressKey("back");
 });
@@ -703,9 +1100,25 @@ function win() {
   $("timer").classList.remove("danger", "turbo", "superturbo", "freeze");
   $("timer").classList.add("won");
   $("keypad").classList.add("hidden");
+  $("toolBtn").classList.add("hidden");
   setMessage("");
   setHint("");
-  setTimeout(() => showResult("🎉", "Bomben är desarmerad!", "Snyggt jobbat, bombexpert!"), 700);
+
+  if (state.level === null) {
+    setTimeout(() => showResult("🎉", "Bomben är desarmerad!", `Snyggt jobbat, agent ${agentName()}!`), 700);
+    return;
+  }
+  // Stjärnor efter hur mycket tid som var kvar
+  const left = Math.min(1, state.remaining / (state.cfg.time * 1000));
+  const stars = left >= .5 ? 3 : left >= .25 ? 2 : 1;
+  const all = missionStars();
+  all[state.level] = Math.max(all[state.level] || 0, stars);
+  store.set("stjarnor", all);
+  const last = state.level === LEVELS.length - 1;
+  const text = last ? `Du klarade alla uppdrag! Du är en riktig bombexpert, agent ${agentName()}! 🏆`
+    : stars === 3 ? "Supersnabbt! Alla tre stjärnorna!"
+    : "Klara bomben snabbare för att få fler stjärnor.";
+  setTimeout(() => showResult("🎉", `Uppdrag ${state.level + 1} klart!`, text, stars), 700);
 }
 
 function explode(reason) {
@@ -718,7 +1131,8 @@ function explode(reason) {
   setTimeout(() => flash.remove(), 1300);
   shake(document.body, "big-shake");
   $("keypad").classList.add("hidden");
-  state.correct.forEach(i => document.querySelector(`.wire[data-index="${i}"]`).classList.add("reveal"));
+  $("toolBtn").classList.add("hidden");
+  state.correct.forEach(i => state.wires[i].group.classList.add("reveal"));
   setMessage("");
   setHint("");
   const names = [...state.correct].map(wireName);
@@ -728,10 +1142,17 @@ function explode(reason) {
   setTimeout(() => showResult("💥", "BOOM!", `${reason} ${answer}`), 2200);
 }
 
-function showResult(emoji, title, text) {
+function showResult(emoji, title, text, stars = null) {
   $("resultEmoji").textContent = emoji;
   $("resultTitle").textContent = title;
   $("resultText").textContent = text;
+  $("resultStars").classList.toggle("hidden", stars === null);
+  if (stars !== null) $("resultStars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
+  const inMission = state.level !== null;
+  const hasNext = inMission && stars !== null && state.level < LEVELS.length - 1;
+  $("nextBtn").classList.toggle("hidden", !hasNext);
+  $("againBtn").textContent = inMission && stars === null ? "Försök igen" : "Spela igen";
+  $("settingsBtn").textContent = inMission ? "Till uppdragen" : "Ändra inställningar";
   $("result").classList.remove("hidden");
 }
 
@@ -765,6 +1186,42 @@ function el(tag, attrs, parent) {
   return node;
 }
 
+const XL = 102, XR = 698, XM = 400;
+
+// Varje sladd är två kurvor som möts på mitten, så att den kan klippas av där.
+// bend böjer kurvorna (används av ormsladden).
+function wirePaths(yL, yR, yM, bend = 0) {
+  return [
+    `M ${XL} ${yL} C ${XL + 110} ${yL + bend} ${XM - 110} ${yM} ${XM} ${yM}`,
+    `M ${XM} ${yM} C ${XM + 110} ${yM} ${XR - 110} ${yR - bend} ${XR} ${yR}`,
+  ];
+}
+const hitPath = ([left, right]) => left + " " + right.replace(/^M [^C]+/, "");
+
+function wiggleSnake(now) {
+  const w = state.wires[state.snake];
+  if (w.cut) return;
+  const t = now / 1000;
+  const yM = Math.min(470, Math.max(245, w.yM + 34 * Math.sin(t * 5)));
+  const paths = wirePaths(w.yL, w.yR, yM, 50 * Math.sin(t * 5 + 1.6));
+  w.halfPaths.forEach((ps, i) => ps.forEach(p => p.setAttribute("d", paths[i])));
+  w.coppers.forEach(c => c.setAttribute("cy", yM));
+  w.hit.setAttribute("d", hitPath(paths));
+  w.group.dataset.midY = yM;
+}
+
+function drawLights() {
+  const svg = $("board");
+  svg.querySelectorAll(".light").forEach(l => l.remove());
+  const n = state.totalTries;
+  const spacing = n > 1 ? Math.min(26, 170 / (n - 1)) : 0;
+  const startX = 630 - (n - 1) * spacing / 2;
+  for (let i = 0; i < n; i++) {
+    const fill = i >= state.triesLeft ? "#400" : i === state.shieldLight ? "#29b6f6" : "#4caf50";
+    el("circle", { class: "light", id: "light" + i, cx: startX + i * spacing, cy: 190, r: 9, fill, stroke: "#111", "stroke-width": 2 }, svg);
+  }
+}
+
 function drawBomb() {
   const svg = $("board");
   svg.innerHTML = "";
@@ -789,10 +1246,7 @@ function drawBomb() {
   // Försökslampor
   const label = el("text", { x: 630, y: 165, "text-anchor": "middle", "font-size": 14, fill: "#cfd6e3", "font-weight": 700 }, svg);
   label.textContent = "FÖRSÖK";
-  const spacing = 26, startX = 630 - (state.totalTries - 1) * spacing / 2;
-  for (let i = 0; i < state.totalTries; i++) {
-    el("circle", { id: "light" + i, cx: startX + i * spacing, cy: 190, r: 9, fill: "#4caf50", stroke: "#111", "stroke-width": 2 }, svg);
-  }
+  drawLights();
   const name = el("text", { x: 170, y: 185, "text-anchor": "middle", "font-size": 16, fill: "#cfd6e3", "font-weight": 700 }, svg);
   name.textContent = "BOMB-O-MATIC 3000";
   if (state.correctCount === 2) {
@@ -809,36 +1263,35 @@ function drawBomb() {
   const yTop = 255, yBottom = 445;
   const ys = Array.from({ length: n }, (_, i) => yTop + i * (yBottom - yTop) / (n - 1));
   const rightYs = shuffle(ys.slice());
-  const xL = 102, xR = 698, xM = 400;
 
   const wireLayer = el("g", {}, svg);
   for (let i = 0; i < n; i++) {
     const yL = ys[i], yR = rightYs[i];
     const yM = (yL + yR) / 2 + 8 + Math.random() * 14;
     const color = state.colors[i];
-    state.wires.push({ index: i, yL, yR, leftPos: i, color, cut: false });
-    const g = el("g", { class: "wire", "data-index": i, "data-mid-x": xM, "data-mid-y": yM }, wireLayer);
+    const g = el("g", { class: "wire", "data-index": i, "data-mid-x": XM, "data-mid-y": yM }, wireLayer);
+    const wire = { index: i, yL, yR, yM, leftPos: i, color, cut: false, group: g, halfPaths: [], coppers: [] };
+    state.wires.push(wire);
 
-    const halves = [
-      { cls: "left",  d: `M ${xL} ${yL} C ${xL + 110} ${yL} ${xM - 110} ${yM} ${xM} ${yM}`, origin: `${xL}px ${yL}px` },
-      { cls: "right", d: `M ${xM} ${yM} C ${xM + 110} ${yM} ${xR - 110} ${yR} ${xR} ${yR}`, origin: `${xR}px ${yR}px` },
-    ];
-    for (const h of halves) {
-      const half = el("g", { class: "half " + h.cls }, g);
-      half.style.transformOrigin = h.origin;
-      el("path", { d: h.d, fill: "none", stroke: "#111", "stroke-width": 15, "stroke-linecap": "butt" }, half);
-      el("path", { class: "color", d: h.d, fill: "none", stroke: color.hex, "stroke-width": 10, "stroke-linecap": "butt" }, half);
-      el("path", { d: h.d, fill: "none", stroke: "#fff", "stroke-width": 2.5, opacity: .35, "stroke-linecap": "butt", transform: "translate(0,-2)" }, half);
-      el("circle", { class: "copper", cx: xM, cy: yM, r: 5, fill: "#e0913a", stroke: "#8a4b12", "stroke-width": 1.5 }, half);
-    }
+    const paths = wirePaths(yL, yR, yM);
+    [["left", XL, yL], ["right", XR, yR]].forEach(([cls, ox, oy], h) => {
+      const half = el("g", { class: "half " + cls }, g);
+      half.style.transformOrigin = `${ox}px ${oy}px`;
+      wire.halfPaths.push([
+        el("path", { d: paths[h], fill: "none", stroke: "#111", "stroke-width": 15, "stroke-linecap": "butt" }, half),
+        el("path", { class: "color", d: paths[h], fill: "none", stroke: color.hex, "stroke-width": 10, "stroke-linecap": "butt" }, half),
+        el("path", { d: paths[h], fill: "none", stroke: "#fff", "stroke-width": 2.5, opacity: .35, "stroke-linecap": "butt", transform: "translate(0,-2)" }, half),
+      ]);
+      wire.coppers.push(el("circle", { class: "copper", cx: XM, cy: yM, r: 5, fill: "#e0913a", stroke: "#8a4b12", "stroke-width": 1.5 }, half));
+    });
     // Osynlig bred linje så att sladden är lätt att träffa, även med fingret
-    el("path", { d: halves[0].d + " " + halves[1].d.replace(/^M [^C]+/, ""), fill: "none", stroke: "transparent", "stroke-width": 30 }, g);
+    wire.hit = el("path", { d: hitPath(paths), fill: "none", stroke: "transparent", "stroke-width": 30 }, g);
 
     g.addEventListener("click", () => onWireClick(i, g));
   }
 
   // Skruvar där sladdarna sitter fast
-  [...ys.map(y => [xL, y]), ...ys.map(y => [xR, y])].forEach(([cx, cy]) =>
+  [...ys.map(y => [XL, y]), ...ys.map(y => [XR, y])].forEach(([cx, cy]) =>
     el("circle", { cx, cy, r: 6, fill: "#b0b8c6", stroke: "#222", "stroke-width": 2 }, svg));
 }
 
@@ -853,16 +1306,108 @@ function sparks(x, y) {
   }
 }
 
+// ---------- Ljudstudion ----------
+let recorder = null, recordingKey = null, recordTimer = null, micStarting = false;
+
+function studioMsg(text) { $("studioMsg").textContent = text; }
+
+function renderStudio() {
+  const rows = $("soundRows");
+  rows.innerHTML = "";
+  for (const slot of SOUND_SLOTS) {
+    const has = !!store.get("ljud." + slot.key, null);
+    const row = document.createElement("div");
+    row.className = "sound-row";
+    row.innerHTML = `<div class="sname"></div>`;
+    row.querySelector(".sname").innerHTML = `${slot.name}<small>${slot.desc} – ${has ? "✅ eget ljud" : "inbyggt ljud"}</small>`;
+    const rec = button(recordingKey === slot.key ? "⏹️ Stoppa" : "⏺️ Spela in", () => toggleRecord(slot.key));
+    if (recordingKey === slot.key) rec.classList.add("recording");
+    rec.disabled = recordingKey !== null && recordingKey !== slot.key;
+    row.append(rec, button("▶️", () => preview(slot.key)));
+    if (has) row.append(button("🗑️", () => { store.remove("ljud." + slot.key); renderStudio(); }));
+    rows.appendChild(row);
+  }
+}
+
+function button(text, onClick) {
+  const b = document.createElement("button");
+  b.className = "small-btn";
+  b.textContent = text;
+  b.addEventListener("click", onClick);
+  return b;
+}
+
+async function toggleRecord(key) {
+  if (recorder) { recorder.stop(); return; }
+  if (micStarting) return; // mikrofonen håller redan på att starta
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    return studioMsg("Den här webbläsaren kan inte spela in ljud. Prova att öppna spelet via länken på webben.");
+  }
+  let stream;
+  micStarting = true;
+  studioMsg("Startar mikrofonen…");
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch {
+    return studioMsg("Mikrofonen gick inte att starta. Tillåt mikrofonen i webbläsaren och försök igen.");
+  } finally {
+    micStarting = false;
+  }
+  const chunks = [];
+  recorder = new MediaRecorder(stream);
+  recordingKey = key;
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.onstop = () => {
+    clearTimeout(recordTimer);
+    stream.getTracks().forEach(t => t.stop());
+    const blob = new Blob(chunks, { type: recorder.mimeType });
+    recorder = null;
+    recordingKey = null;
+    const reader = new FileReader();
+    reader.onload = () => {
+      studioMsg(store.set("ljud." + key, reader.result) ? "Sparat! Tryck på ▶️ för att lyssna." : "Ljudet gick inte att spara – prova ett kortare ljud.");
+      renderStudio();
+    };
+    reader.readAsDataURL(blob);
+  };
+  recorder.start();
+  studioMsg("🔴 Spelar in… säg något!");
+  renderStudio();
+  recordTimer = setTimeout(() => recorder && recorder.stop(), MAX_RECORDING_MS);
+}
+
+async function preview(key) {
+  ensureAudio();
+  await loadCustomSounds();
+  ({ boom: sound.boom, win: sound.win, wrong: sound.wrong })[key]();
+}
+
+$("studioBtn").addEventListener("click", () => {
+  studioMsg("");
+  renderStudio();
+  $("studio").classList.remove("hidden");
+});
+$("studioClose").addEventListener("click", () => {
+  if (recorder) recorder.stop();
+  $("studio").classList.add("hidden");
+});
+
 // ---------- Knappar ----------
-$("startBtn").addEventListener("click", startGame);
-$("againBtn").addEventListener("click", startGame);
-$("goBtn").addEventListener("click", beginCountdown);
+$("startBtn").addEventListener("click", () => startGame(readFreeConfig()));
+$("againBtn").addEventListener("click", () =>
+  state.level === null ? startGame(readFreeConfig()) : startMission(state.level));
+$("nextBtn").addEventListener("click", () => startMission(state.level + 1));
+$("goBtn").addEventListener("click", afterSecretChosen);
+$("acceptBtn").addEventListener("click", () => { $("briefing").classList.add("hidden"); beginCountdown(); });
+document.querySelectorAll(".tools button").forEach(b => b.addEventListener("click", () => chooseTool(b.dataset.tool)));
+$("toolBtn").addEventListener("click", useTool);
 $("settingsBtn").addEventListener("click", () => {
   state.phase = "over";
   clearInterval(state.blinkTimer);
   $("result").classList.add("hidden");
   $("game").classList.add("hidden");
   $("setup").classList.remove("hidden");
+  showPlayMode(state.level === null ? "free" : "mission");
 });
 </script>
 </body>
