@@ -62,6 +62,8 @@
     cursor: pointer;
   }
   .choice button.active { border-color: #ffcc33; background: #3a3420; font-weight: 700; }
+  .choice.small { gap: 6px; margin: 2px 0 4px 34px; }
+  .choice.small button { padding: 6px 0; font-size: 1rem; border-radius: 9px; }
 
   .extras { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-bottom: 8px; }
   @media (max-width: 520px) { .extras { grid-template-columns: 1fr; } }
@@ -233,10 +235,18 @@
       <input type="checkbox" id="hintsInput" checked>
       <span>💡 Ledtrådar<small>Ett fel klipp ger en ledtråd.</small></span>
     </label>
-    <label class="toggle">
-      <input type="checkbox" id="codeInput">
-      <span>🔢 Kodlås<small>Efter rätt sladd: kom ihåg koden och slå in den.</small></span>
-    </label>
+    <div>
+      <label class="toggle">
+        <input type="checkbox" id="codeInput">
+        <span>🔢 Kodlås<small>Efter rätt sladd: kom ihåg koden och slå in den.</small></span>
+      </label>
+      <div class="choice small hidden" id="digitsChoice" aria-label="Antal siffror i koden">
+        <button data-digits="3" class="active">3</button>
+        <button data-digits="4">4</button>
+        <button data-digits="5">5</button>
+        <button data-digits="6">6</button>
+      </div>
+    </div>
     <label class="toggle">
       <input type="checkbox" id="doubleInput">
       <span>💣💣 Dubbelbomb<small>Två sladdar är rätt – klipp båda!</small></span>
@@ -307,8 +317,7 @@ const COLORS = [
   { name: "rosa",   hex: "#f06292", warm: true },
 ];
 const FREEZE_BONUS_MS = 10000;
-const CODE_LENGTH = 3;
-const CODE_SHOW_MS = 3000;
+const CODE_SHOW_MS_PER_DIGIT = 1000;
 
 const $ = id => document.getElementById(id);
 const checked = id => $(id).checked;
@@ -317,6 +326,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // ---------- Inställningar ----------
 const timeInput = $("timeInput"), wiresInput = $("wiresInput"), triesInput = $("triesInput");
 let mode = "computer";
+let codeLength = 3;
 
 function formatSeconds(s) {
   if (s < 60) return s + " sekunder";
@@ -334,6 +344,12 @@ function updateLabels() {
 }
 [timeInput, wiresInput, triesInput, $("doubleInput")].forEach(el => el.addEventListener("input", updateLabels));
 updateLabels();
+
+$("codeInput").addEventListener("input", () => $("digitsChoice").classList.toggle("hidden", !checked("codeInput")));
+document.querySelectorAll("#digitsChoice button").forEach(btn => btn.addEventListener("click", () => {
+  codeLength = +btn.dataset.digits;
+  document.querySelectorAll("#digitsChoice button").forEach(b => b.classList.toggle("active", b === btn));
+}));
 
 document.querySelectorAll("#modeChoice button").forEach(btn => btn.addEventListener("click", () => {
   mode = btn.dataset.mode;
@@ -608,7 +624,7 @@ function makeHint() {
 // ---------- Kodlås ----------
 function startCode() {
   state.phase = "code";
-  state.code = Array.from({ length: CODE_LENGTH }, () => Math.floor(Math.random() * 10)).join("");
+  state.code = Array.from({ length: codeLength }, () => Math.floor(Math.random() * 10)).join("");
   sound.pick();
   setHint("");
   $("keypad").classList.remove("hidden");
@@ -629,7 +645,7 @@ function showCode(text) {
     setKeysEnabled(true);
     renderCodeEntry();
     setMessage("Slå in koden! 🔢");
-  }, CODE_SHOW_MS);
+  }, state.code.length * CODE_SHOW_MS_PER_DIGIT);
 }
 
 function setKeysEnabled(on) {
@@ -637,16 +653,16 @@ function setKeysEnabled(on) {
 }
 
 function renderCodeEntry() {
-  $("codeDisplay").textContent = state.codeEntry.padEnd(CODE_LENGTH, "_");
+  $("codeDisplay").textContent = state.codeEntry.padEnd(state.code.length, "_");
 }
 
 function pressKey(key) {
   if (state.phase !== "code" || state.codeShowing) return;
   sound.key();
   if (key === "back") state.codeEntry = state.codeEntry.slice(0, -1);
-  else if (state.codeEntry.length < CODE_LENGTH) state.codeEntry += key;
+  else if (state.codeEntry.length < state.code.length) state.codeEntry += key;
   renderCodeEntry();
-  if (state.codeEntry.length < CODE_LENGTH) return;
+  if (state.codeEntry.length < state.code.length) return;
 
   if (state.codeEntry === state.code) return win();
   state.triesLeft--;

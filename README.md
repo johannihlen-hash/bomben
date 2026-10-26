@@ -11,7 +11,7 @@ Extra utmaningar man kan slå på:
 
 - 🙋 **En kompis väljer** vilken sladd som är rätt medan bombexperten blundar
 - 💡 **Ledtrådar** efter varje fel klipp
-- 🔢 **Kodlås** – efter rätt sladd måste man minnas och slå in en kod
+- 🔢 **Kodlås** – efter rätt sladd måste man minnas och slå in en kod på 3–6 siffror
 - 💣💣 **Dubbelbomb** – två sladdar är rätt
 - ⚡ **Turbosladd** – tiden går dubbelt så fort
 - ❄️ **Frys-sladd** – ger 10 extra sekunder
