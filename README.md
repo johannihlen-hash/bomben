@@ -14,6 +14,7 @@ Extra utmaningar man kan slå på:
 - 🔢 **Kodlås** – efter rätt sladd måste man minnas och slå in en kod på 3–6 siffror
 - 💣💣 **Dubbelbomb** – två sladdar är rätt
 - ⚡ **Turbosladd** – tiden går dubbelt så fort
+- 🚀 **Superturbosladd** – tiden går fyra gånger så fort (Aarons idé!)
 - ❄️ **Frys-sladd** – ger 10 extra sekunder
 - 🌈 **Blinksladd** – byter färg hela tiden
 
